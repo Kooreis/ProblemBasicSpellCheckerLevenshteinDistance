@@ -1,14 +1,22 @@
-import java.util.*;
+class SpellChecker {
+    private String[] dictionary;
 
-public class Main {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter a word:");
-        String word = scanner.nextLine();
-        System.out.println("Enter dictionary words:");
-        String line = scanner.nextLine();
-        String[] dictionary = line.split(" ");
-        SpellChecker spellChecker = new SpellChecker(dictionary);
-        System.out.println("Suggestions: " + spellChecker.suggest(word));
+    public SpellChecker(String[] dictionary) {
+        this.dictionary = dictionary;
     }
-}
+
+    public List<String> suggest(String word) {
+        List<String> suggestions = new ArrayList<>();
+        int minDistance = Integer.MAX_VALUE;
+        for (String dictWord : dictionary) {
+            int distance = levenshteinDistance(word, dictWord);
+            if (distance < minDistance) {
+                minDistance = distance;
+                suggestions.clear();
+                suggestions.add(dictWord);
+            } else if (distance == minDistance) {
+                suggestions.add(dictWord);
+            }
+        }
+        return suggestions;
+    }
